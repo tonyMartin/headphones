@@ -312,6 +312,7 @@
                                 <input type="radio" name="torrent_downloader" id="torrent_downloader_transmission" value="1" ${config['torrent_downloader_transmission']}> Transmission
                                 <input type="radio" name="torrent_downloader" id="torrent_downloader_utorrent" value="2" ${config['torrent_downloader_utorrent']}> uTorrent (Beta)
                                 <input type="radio" name="torrent_downloader" id="torrent_downloader_deluge" value="3" ${config['torrent_downloader_deluge']}> Deluge (Beta)
+                                <input type="radio" name="torrent_downloader" id="torrent_downloader_synology" value="4" ${config['torrent_downloader_synology']}> Synology DS (beta)
                             </fieldset>
                             <fieldset id="torrent_blackhole_options">
                                 <div class="row">
@@ -395,7 +396,7 @@
                                 <div class="row">
                                     <label>Deluge SSL Certificate</label>
                                     <input type="text" name="deluge_cert" value="${config['deluge_cert']}" size="30">
-                                    <small>Path to the certificate file. Make sure to use a valid certificate ("Issued To" field must match 
+                                    <small>Path to the certificate file. Make sure to use a valid certificate ("Issued To" field must match
                                         hostname) which is <em>not</em> the case with the default certificate. Path is usually <span style="font-family: monospace;">%appdata%\deluge\ssl</span> on Windows, <span style="font-family: monospace;">~/.config/deluge/ssl/</span> on Linux. Leave this blank if you are using a self-signed certificate.</small>
                                 </div>
                                 <div class="row">
@@ -419,6 +420,25 @@
                                 <div class="row checkbox">
                                     <label>Add Torrent Paused</label>
                                     <input type="checkbox" name="deluge_paused" value="1" ${config['deluge_paused']}>
+                                </div>
+                            </fieldset>
+                            <fieldset id="synology_options">
+                                <div class="row">
+                                    <label>Synology DownloadStation Host</label>
+                                    <input type="text" name="synology_host" value="${config['synology_host']}" size="30">
+                                    <small>usually http://localhost:5000</small>
+                                </div>
+                                <div class="row">
+                                    <label>Synology DownloadStation Username</label>
+                                    <input type="text" name="synology_username" value="${config['synology_username']}" size="30">
+                                </div>
+                                <div class="row">
+                                    <label>Synology DownloadStation Password</label>
+                                    <input type="password" name="synology_password" value="${config['synology_password']}" size="30">
+                                </div>
+                                <div class="row">
+                                    <small>Note: With Synology DownloadStation, you can specify a different download directory for downloads sent from Headphones.
+                                    Set it in the Music Download Directory below</small>
                                 </div>
                             </fieldset>
                             <fieldset id="general_torrent_options">
@@ -2231,25 +2251,29 @@
 
                 if ($("#torrent_downloader_blackhole").is(":checked"))
                         {
-                            $("#transmission_options,#utorrent_options,#deluge_options").hide();
+                            $("#transmission_options,#utorrent_options,#deluge_options,#synology_options").hide();
                             $("#torrent_blackhole_options").show();
                         }
                 if ($("#torrent_downloader_transmission").is(":checked"))
                         {
-                            $("#torrent_blackhole_options,#utorrent_options,#deluge_options").hide();
+                            $("#torrent_blackhole_options,#utorrent_options,#deluge_options,#synology_options").hide();
                             $("#transmission_options").show();
                         }
                 if ($("#torrent_downloader_utorrent").is(":checked"))
                         {
-                            $("#torrent_blackhole_options,#transmission_options,#deluge_options").hide();
+                            $("#torrent_blackhole_options,#transmission_options,#deluge_options,#synology_options").hide();
                             $("#utorrent_options").show();
                         }
                 if ($("#torrent_downloader_deluge").is(":checked"))
                         {
-                            $("#torrent_blackhole_options,#transmission_options,#utorrent_options").hide();
+                            $("#torrent_blackhole_options,#transmission_options,#utorrent_options,#synology_options").hide();
                             $("#deluge_options").show();
                         }
-
+                if ($("#torrent_downloader_synology").is(":checked"))
+                        {
+                            $("#torrent_blackhole_options,#transmission_options,#utorrent_options,#deluge_options").hide();
+                            $("#synology_options").show();
+                        }
 
                 $('input[type=radio]').change(function(){
                         if ($("#preferred_bitrate").is(":checked"))
@@ -2286,19 +2310,23 @@
                         }
                         if ($("#torrent_downloader_blackhole").is(":checked"))
                         {
-                            $("#transmission_options,#utorrent_options,#deluge_options").fadeOut("fast", function() { $("#torrent_blackhole_options").fadeIn() });
+                            $("#transmission_options,#utorrent_options,#deluge_options,#synology_options").fadeOut("fast", function() { $("#torrent_blackhole_options").fadeIn() });
                         }
                         if ($("#torrent_downloader_transmission").is(":checked"))
                         {
-                            $("#torrent_blackhole_options,#utorrent_options,#deluge_options").fadeOut("fast", function() { $("#transmission_options").fadeIn() });
+                            $("#torrent_blackhole_options,#utorrent_options,#deluge_options,#synology_options").fadeOut("fast", function() { $("#transmission_options").fadeIn() });
                         }
                         if ($("#torrent_downloader_utorrent").is(":checked"))
                         {
-                            $("#torrent_blackhole_options,#transmission_options,#deluge_options").fadeOut("fast", function() { $("#utorrent_options").fadeIn() });
+                            $("#torrent_blackhole_options,#transmission_options,#deluge_options,#synology_options").fadeOut("fast", function() { $("#utorrent_options").fadeIn() });
                         }
                         if ($("#torrent_downloader_deluge").is(":checked"))
                         {
-                            $("#torrent_blackhole_options,#utorrent_options,#transmission_options").fadeOut("fast", function() { $("#deluge_options").fadeIn() });
+                            $("#torrent_blackhole_options,#utorrent_options,#transmission_options,#synology_options").fadeOut("fast", function() { $("#deluge_options").fadeIn() });
+                        }
+                        if ($("#torrent_downloader_synology").is(":checked"))
+                        {
+                            $("#torrent_blackhole_options,#utorrent_options,#transmission_options,#deluge_options").fadeOut("fast", function() { $("#synology_options").fadeIn() });
                         }
                 });
 
