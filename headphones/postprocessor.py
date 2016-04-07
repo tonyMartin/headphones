@@ -27,7 +27,7 @@ from beets import autotag
 from beets import config as beetsconfig
 from beets.mediafile import MediaFile, FileTypeError, UnreadableFileError
 from beetsplug import lyrics as beetslyrics
-from headphones import notifiers, utorrent, transmission, deluge
+from headphones import notifiers, utorrent, transmission, deluge, synology
 from headphones import db, albumart, librarysync
 from headphones import logger, helpers, request, mb, music_encoder
 
@@ -446,7 +446,7 @@ def doPostProcessing(albumid, albumpath, release, tracks, downloaded_track_list,
         [albumid])
 
     # Check if torrent has finished seeding
-    if headphones.CONFIG.TORRENT_DOWNLOADER == 1 or headphones.CONFIG.TORRENT_DOWNLOADER == 2:
+    if headphones.CONFIG.TORRENT_DOWNLOADER == 1 or headphones.CONFIG.TORRENT_DOWNLOADER == 2 or headphones.CONFIG.TORRENT_DOWNLOADER == 3:
         seed_snatched = myDB.action(
             'SELECT * from snatched WHERE Status="Seed_Snatched" and AlbumID=?',
             [albumid]).fetchone()
